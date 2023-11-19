@@ -1,0 +1,9 @@
+discord.py
+aiohttp
+beautifulsoup4
+requests
+openai
+python-chess
+matplotlib
+google-auth
+google-api-python-client
