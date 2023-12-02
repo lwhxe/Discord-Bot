@@ -26,8 +26,6 @@ import subprocess
 import uuid
 import json
 import logging
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
 
 logging.basicConfig(level=logging.INFO)
 
@@ -245,7 +243,16 @@ async def report(interaction:discord.Interaction, user: str, context:str):
 async def addbadword(interaction:discord.Interaction, badwords:str):
     embed_prefix = discord.Embed(title="Checking permissions...", color=0xFF0000)
     await interaction.response.send_message(embed=embed_prefix, ephemeral=True)
-
+    ADMIN_ROLE = discord.utils.get(interaction.guild.roles, name='ADMIN')
+    if ADMIN_ROLE not in interaction.user.roles:
+        canceling_embed = discord.Embed(
+            title = 'Errno13',
+            description="You don't have permission to do that!",
+            color=0xFF0000
+            )
+        canceling_embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/512/7596/7596460.png")
+        await interaction.followup.send(embed=canceling_embed)
+        return
     has_permission = any(role.name == 'ADMIN' or role.name == 'Programmerare' for role in interaction.user.roles)
     if not has_permission:
         embed_denial = discord.Embed(title="Errno13", description=f"You don't have permission to use that command {interaction.user.mention}!", color=0xFF0000)
@@ -271,6 +278,7 @@ async def addbadword(interaction:discord.Interaction, badwords:str):
 @app_commands.describe(amount="How many?")
 async def purge(interaction:discord.Interaction, amount: int):
     await interaction.response.defer(ephemeral=True)#Create if statement here:
+    
     first_embed = discord.Embed(title=f"Attempting deletion of {amount} messages..", color=0xFF0000)
     await interaction.followup.send(embed=first_embed, ephemeral=True)
     try:
@@ -469,15 +477,41 @@ async def ytdlp(interaction: discord.Interaction, link: str):
     width, height = await loop.run_in_executor(None, get_video_resolution, downloaded_file_path)
 
     if height < 720:
+        # Convert the video
+        batch_command = ["conversionnores.bat", downloaded_file_path]
+        batch_startupinfo = None
+        if platform.system() == "Windows":
+            batch_startupinfo = subprocess.STARTUPINFO()
+            batch_startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            batch_startupinfo.wShowWindow = subprocess.SW_HIDE
+
+        process = await asyncio.create_subprocess_exec(
+            *batch_command,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+            startupinfo=batch_startupinfo
+        )
+
+        stdout, stderr = await process.communicate()
+
+        if process.returncode != 0:
+            await interaction.followup.send(f"Error in post-processing: {stderr.decode()}")
+            return
         # Send the original downloaded video
-        try:
-            with open(downloaded_file_path, 'rb') as fp:
-                end_time = pytime.time()
-                totaltime = end_time - start_time
-                embed = discord.Embed(description=f"The time used: {totaltime:.3f} seconds!", color=0x00fff5)
-                await interaction.followup.send(file=discord.File(fp, filename=os.path.basename(downloaded_file_path)), embed=embed)
-        finally:
-            os.remove(downloaded_file_path)
+        # Handle the converted file
+        converted_file_path = f"{download_dir}/video_{unique_id}_converted.mp4"
+        if os.path.exists(converted_file_path):
+            try:
+                with open(converted_file_path, 'rb') as fp:
+                    end_time = pytime.time()
+                    totaltime = end_time - start_time
+                    embed = discord.Embed(description=f"The time used: {totaltime:.3f} seconds!", color=0x00fff5)
+                    await interaction.followup.send(file=discord.File(fp, filename=os.path.basename(converted_file_path)), embed=embed)
+            finally:
+                os.remove(converted_file_path)
+                os.remove(downloaded_file_path)
+        else:
+            await interaction.followup.send("Converted file not found.")#end of second option
     else:
         # Convert the video
         batch_command = ["conversion.bat", downloaded_file_path]
