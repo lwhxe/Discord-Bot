@@ -29,13 +29,11 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-with open("badwords.json", 'r') as json_file:
+with open("json_files/badwords.json", 'r') as json_file:
     bad_words = json.load(json_file)
 
-with open("keys.json", "r+") as file:
+with open("json_files/keys.json", "r+") as file:
     data = json.load(file)
-    temalista = data['temalista']
-    kursid = data['kursid']  # Load kursid data
 
 TOKEN = data["Bot_token"]
 CHANNEL_ID = 1144745209272471622
@@ -425,11 +423,10 @@ def format_food_info(food_descriptions):
 async def ytdlp(interaction: discord.Interaction, link: str):
     await interaction.response.defer()
     start_time = pytime.time()
-    download_dir = "F:/Rasputin/dist"
-    ytdlp_path = "C:/Temp/PATH_stuff/yt-dlp/yt-dlp.exe"
+    download_dir = "downloads"
     unique_id = uuid.uuid4()
     unique_filename = f"video_{unique_id}.%(ext)s"
-    command = [ytdlp_path, "-f", "bestvideo+bestaudio", "-o", f"{download_dir}/{unique_filename}", link]
+    command = ["yt-dlp", "-f", "bestvideo+bestaudio", "-o", f"{download_dir}/{unique_filename}", link]
 
     startupinfo = None
     if platform.system() == "Windows":
@@ -478,7 +475,7 @@ async def ytdlp(interaction: discord.Interaction, link: str):
 
     if height < 720:
         # Convert the video
-        batch_command = ["conversionnores.bat", downloaded_file_path]
+        batch_command = ["conversion/conversionnores.bat", downloaded_file_path]
         batch_startupinfo = None
         if platform.system() == "Windows":
             batch_startupinfo = subprocess.STARTUPINFO()
@@ -514,7 +511,7 @@ async def ytdlp(interaction: discord.Interaction, link: str):
             await interaction.followup.send("Converted file not found.")#end of second option
     else:
         # Convert the video
-        batch_command = ["conversion.bat", downloaded_file_path]
+        batch_command = ["conversion/conversion.bat", downloaded_file_path]
         batch_startupinfo = None
         if platform.system() == "Windows":
             batch_startupinfo = subprocess.STARTUPINFO()
