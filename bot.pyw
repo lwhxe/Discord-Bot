@@ -1,5 +1,4 @@
 import discord
-import ctypes
 import platform
 from subprocess import Popen, PIPE
 import glob
@@ -8,10 +7,8 @@ from discord.ext import commands, tasks
 import re
 import aiohttp
 import asyncio
-from bs4 import BeautifulSoup
 import moviepy.editor as mp
 import requests
-import openai
 import chess
 import chess.engine
 import chess.pgn
@@ -25,9 +22,6 @@ import os
 import subprocess
 import uuid
 import json
-import logging
-
-logging.basicConfig(level=logging.INFO)
 
 with open("json_files/badwords.json", 'r') as json_file:
     bad_words = json.load(json_file)
@@ -549,20 +543,13 @@ async def ytdlp(interaction: discord.Interaction, link: str):
 @bot.tree.command(name="sort", description="Sorts any amount of numbers put inside of the command.")
 @app_commands.describe(numbers="Write any numbers separated by a comma")
 async def sort(interaction: discord.Interaction, numbers: str):
-    logging.info("Received sort command.")
     await interaction.response.defer(ephemeral=True)
-    logging.info("Interaction deferred.")
-
     try:
         array = [float(n) for n in numbers.replace(" ", "").split(",")]
-        logging.info(f"Converted input to array: {array}")
         sorted_array = quick_sort(array)
-        logging.info(f"Array sorted: {sorted_array}")
         embed = discord.Embed(title="Sorted numbers:", description=', '.join(map(str, sorted_array)), color=0xFF0000)
         await interaction.followup.send(embed=embed)
-        logging.info("Response sent.")
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
         message = await interaction.followup.send("An error occurred while processing your request.")
         await asyncio.sleep(5)
         await message.delete()
