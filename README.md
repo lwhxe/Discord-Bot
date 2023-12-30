@@ -1,5 +1,5 @@
 # Discord general-purpose bot
-This will be covering:
+This will cover the following:
 * how to install.
 * how to run.
 * how it works.
