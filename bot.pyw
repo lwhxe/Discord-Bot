@@ -28,9 +28,8 @@ async def on_message(message):
         return
     channel_name = message.channel.name
     if channel_name == "announcements":
-        if message.author.id != 594947855278538783 and message.author.id != 823247908505255956:
-            await message.delete()
-            return
+        await message.delete()
+        return
     author_name = message.author.name
     content = message.content
     print(f"{author_name}{message.author.discriminator} in {channel_name} sent: {content}")
