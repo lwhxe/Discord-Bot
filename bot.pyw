@@ -82,9 +82,10 @@ async def upgrade(interaction: discord.Interaction):
         msg = discord.Embed(description="Upgrading bot...", color=0xFF0000)
         await interaction.response.send_message(embed=msg, ephemeral=True)
         response = requests.get("https://raw.githubusercontent.com/lwhxe/Discord-Bot/main/bot.pyw")
+        print(response.text)
         if response.status_code == 200:
             with open("main.py", "w") as file:
-                file.write(response.content)
+                file.write(response.text)
             print("file downloaded successfully.")
         else:
             print("Failed to download file.", response.status_code)
