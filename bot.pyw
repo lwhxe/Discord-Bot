@@ -75,7 +75,7 @@ async def update(interaction: discord.Interaction):
 async def upgrade(interaction: discord.Interaction):
     admin_role = discord.utils.find(lambda r: r.name =="ADMIN", interaction.user.roles)
     if not admin_role:
-        msg = discord.Embed(description=f"You are not allowed to perform thi saction {interaction.user.mention}!", color=0xFF0000)
+        msg = discord.Embed(description=f"You are not allowed to perform this action {interaction.user.mention}!", color=0xFF0000)
         await interaction.response.send_message(embed=msg, ephemeral=True)
     else:
         msg = discord.Embed(description="Upgrading bot...", color=0xFF0000)
