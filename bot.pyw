@@ -23,7 +23,7 @@ async def on_ready():
         print(e)
     await asyncio.sleep(10)
 @bot.event
-async def on_message(message):
+async def on_message(message) -> None:
     if message.author == bot.user:
         return
     channel_name = message.channel.name
@@ -43,7 +43,7 @@ async def on_message(message):
         await msg.delete()
     await bot.process_commands(message)
 @bot.event
-async def on_message_edit(before, after):
+async def on_message_edit(before, after) -> None:
     if before.content == after.content or after.author == bot.user:
         return
     if message.channel.name == "announcements":
@@ -60,7 +60,7 @@ async def on_message_edit(before, after):
         await msg.delete()
     await bot.process_commands(after)
 @bot.tree.command(name="update", description="Reinitialize the bots sequence...")
-async def update(interaction: discord.Interaction):
+async def update(interaction: discord.Interaction) -> None:
     # Checking if the user has the ADMIN role
     admin_role = discord.utils.find(lambda r: r.name == 'ADMIN', interaction.user.roles)
     if not admin_role:
@@ -72,7 +72,7 @@ async def update(interaction: discord.Interaction):
         # Restarting the script
         os.execl(sys.executable, sys.executable, 'main.py')
 @bot.tree.command(name="upgrade", description="Pull from github...")
-async def upgrade(interaction: discord.Interaction):
+async def upgrade(interaction: discord.Interaction) -> None:
     admin_role = discord.utils.find(lambda r: r.name =="ADMIN", interaction.user.roles)
     if not admin_role:
         msg = discord.Embed(description=f"You are not allowed to perform this action {interaction.user.mention}!", color=0xFF0000)
@@ -88,6 +88,7 @@ async def upgrade(interaction: discord.Interaction):
             print("file downloaded successfully.")
         else:
             print("Failed to download file.", response.status_code)
+            return
         msg = discord.Embed(description="Bot upgraded.", color=0xFF0000)
         await interaction.followup.send(embed=msg, ephemeral=True)
 bot.run(TOKEN)
