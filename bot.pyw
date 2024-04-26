@@ -25,15 +25,29 @@ def check_syntax(filename) -> None:
     except py_compile.PyCompileError as e:
         print(f"Syntax error in {filename}: {e}")
         return 1
-
 @bot.event
 async def on_ready():
     try:
+        # Sync registered commands with the current commands in code.
+        # This updates any changes and removes commands not present in the code.
         synced = await bot.tree.sync()
+
+        # Fetch all registered commands from Discord
+        registered_commands = await bot.tree.fetch_commands()
+
+        # Compare registered commands with the bot's current commands
+        current_command_names = {cmd.name for cmd in bot.tree.get_commands()}
+        stale_commands = [cmd for cmd in registered_commands if cmd.name not in current_command_names]
+
+        # Remove commands that are no longer defined in the bot's code
+        for cmd in stale_commands:
+            await bot.tree.remove_command(cmd.name, type=cmd.type)
+            print(f"Removed stale command: {cmd.name}")
+
         print(f"{len(synced)} commands synced!")
+
     except Exception as e:
-        print(e)
-    await asyncio.sleep(10)
+        print(f"Error during command sync or removal: {e}")
 @bot.event
 async def on_message(message) -> None:
     if message.author == bot.user:
