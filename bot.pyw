@@ -64,13 +64,13 @@ async def update(interaction: discord.Interaction) -> None:
     # Checking if the user has the ADMIN role
     admin_role = discord.utils.find(lambda r: r.name == 'ADMIN', interaction.user.roles)
     if not admin_role:
-        msg = discord.(description=f"You are not allowed to perform this action {interaction.user.mention}!", color=0xFF0000)
+        msg = discord.Embed(description=f"You are not allowed to perform this action {interaction.user.mention}!", color=0xFF0000)
         await interaction.response.send_message(embed=msg, ephemeral=True)
     else:
         msg = discord.Embed(description="Updating bot...", color=0xFF0000)
         await interaction.response.send_message(embed=msg, ephemeral=True)
         # Restarting the script
-        os.execl(sys.executable, sys.executable, 'main.py')
+        os.execl(sys.executable, sys.executable, 'main.py', "2>/dev/null")
 @bot.tree.command(name="upgrade", description="Pull from github...")
 async def upgrade(interaction: discord.Interaction) -> None:
     admin_role = discord.utils.find(lambda r: r.name =="ADMIN", interaction.user.roles)
@@ -91,4 +91,8 @@ async def upgrade(interaction: discord.Interaction) -> None:
             return
         msg = discord.Embed(description="Bot upgraded.", color=0xFF0000)
         await interaction.followup.send(embed=msg, ephemeral=True)
+@bot.tree.command(name="test")
+async def test(interaction: discord.Interaction) -> None:
+    interaction.response.defer()asdfasdfasdgshjrkjg jdgj
+    interaction.response.send_message(msg, ephemeral)
 bot.run(TOKEN)
