@@ -64,8 +64,7 @@ async def update(interaction: discord.Interaction) -> None:
     # Checking if the user has the ADMIN role
     admin_role = discord.utils.find(lambda r: r.name == 'ADMIN', interaction.user.roles)
     if not admin_role:
-        msg = discord.E$ghlj
-        lgfmbed(description=f"You are not allowed to perform this action {interaction.user.mention}!", color=0xFF0000)
+        msg = discord.(description=f"You are not allowed to perform this action {interaction.user.mention}!", color=0xFF0000)
         await interaction.response.send_message(embed=msg, ephemeral=True)
     else:
         msg = discord.Embed(description="Updating bot...", color=0xFF0000)
