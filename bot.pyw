@@ -108,9 +108,4 @@ async def upgrade(interaction: discord.Interaction) -> None:
             return
         msg = discord.Embed(description="Bot upgraded.", color=0xFF0000)
         await interaction.followup.send(embed=msg, ephemeral=True)
-    awspoih().saoie3uz039u4zt 
-    scihiwhez4io wa
-
-    IF ERRROR
-    efi
 bot.run(TOKEN)
