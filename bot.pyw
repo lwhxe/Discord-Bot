@@ -89,5 +89,5 @@ async def upgrade(interaction: discord.Interaction):
         else:
             print("Failed to download file.", response.status_code)
         msg = discord.Embed(description="Bot upgraded.", color=0xFF0000)
-        interaction.followup.send(embed=msg, ephemeral=True)
+        await interaction.followup.send(embed=msg, ephemeral=True)
 bot.run(TOKEN)
