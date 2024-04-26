@@ -70,7 +70,7 @@ async def update(interaction: discord.Interaction) -> None:
         msg = discord.Embed(description="Updating bot...", color=0xFF0000)
         await interaction.response.send_message(embed=msg, ephemeral=True)
         # Restarting the script
-        os.execl(sys.executable, sys.executable, 'main.py', "2>/dev/null")
+        os.execl(sys.executable, sys.executable, 'main.py')
 @bot.tree.command(name="upgrade", description="Pull from github...")
 async def upgrade(interaction: discord.Interaction) -> None:
     admin_role = discord.utils.find(lambda r: r.name =="ADMIN", interaction.user.roles)
@@ -91,8 +91,4 @@ async def upgrade(interaction: discord.Interaction) -> None:
             return
         msg = discord.Embed(description="Bot upgraded.", color=0xFF0000)
         await interaction.followup.send(embed=msg, ephemeral=True)
-@bot.tree.command(name="test")
-async def test(interaction: discord.Interaction) -> None:
-    interaction.response.defer()asdfasdfasdgshjrkjg jdgj
-    interaction.response.send_message(msg, ephemeral)
 bot.run(TOKEN)
