@@ -18,6 +18,7 @@ bot = commands.Bot(command_prefix='/', intents=discord.Intents.all())
 async def on_ready():
     try:
         synced = await bot.tree.sync()
+        print(f"{len(synced)} commands synced!")
     except Exception as e:
         print(e)
     await asyncio.sleep(10)
@@ -80,7 +81,13 @@ async def upgrade(interaction: discord.Interaction):
     else:
         msg = discord.Embed(description="Upgrading bot...", color=0xFF0000)
         await interaction.response.send_message(embed=msg, ephemeral=True)
-        ...
+        response = requests.get("https://raw.githubusercontent.com/lwhxe/Discord-Bot/main/bot.pyw")
+        if response.status_code == 200:
+            with open("main.py", "w") as file:
+                file.write(response.content)
+            print("file downloaded successfully.")
+        else:
+            print("Failed to download file.", response.status_code)
         msg = discord.Embed(description="Bot upgraded.", color=0xFF0000)
         interaction.followup.send(embed=msg, ephemeral=True)
 bot.run(TOKEN)
