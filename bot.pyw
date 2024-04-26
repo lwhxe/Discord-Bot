@@ -8,12 +8,24 @@ import json
 import os
 import sys
 import requests
+import py_compile
 with open("json_files/badwords.json", 'r') as json_file:
     bad_words = json.load(json_file)
 with open("json_files/key.txt", "r") as key_file:
     data = key_file.read()
 TOKEN = data
 bot = commands.Bot(command_prefix='/', intents=discord.Intents.all())
+def check_syntax(filename) -> None:
+    try:
+        # This function compiles the source into a code object which can be executed
+        # It will raise a PyCompileError if there are syntax errors
+        py_compile.compile(filename, doraise=True)
+        print(f"No syntax errors in {filename}.")
+        return
+    except py_compile.PyCompileError as e:
+        print(f"Syntax error in {filename}: {e}")
+        return 1
+
 @bot.event
 async def on_ready():
     try:
@@ -70,7 +82,12 @@ async def update(interaction: discord.Interaction) -> None:
         msg = discord.Embed(description="Updating bot...", color=0xFF0000)
         await interaction.response.send_message(embed=msg, ephemeral=True)
         # Restarting the script
-        os.execl(sys.executable, sys.executable, 'main.py')
+        check = check_syntax("main.py")
+        if check != 1:
+            os.execl(sys.executable, sys.executable, 'main.py')
+        msg = discord.Embed(description="There was an error...", color=0xFF0000)
+        await interaction.followup.send(embed=msg, ephemeral=True)
+        return
 @bot.tree.command(name="upgrade", description="Pull from github...")
 async def upgrade(interaction: discord.Interaction) -> None:
     admin_role = discord.utils.find(lambda r: r.name =="ADMIN", interaction.user.roles)
