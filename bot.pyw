@@ -124,6 +124,7 @@ async def upgrade(interaction: discord.Interaction) -> None:
         await interaction.followup.send(embed=msg, ephemeral=True)
 @bot.tree.command(name="notify", description="Sends custom message to users.")
 @app_commands.describe(content="What do you want to send?")
-async def notify(interaction: discord.Interaction) -> None:
+@app_commands.describe(users="Who do you want to send this to?")
+async def notify(interaction: discord.Interaction, content: str, users: str) -> None:
     raise NotImplementedError
 bot.run(TOKEN)
