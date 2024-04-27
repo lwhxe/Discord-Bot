@@ -168,7 +168,5 @@ async def notify(interaction: discord.Interaction, content: str, users: str):
         await interaction.followup.send(f"{success_message}\n{failure_message}", ephemeral=True)
     else:
         await interaction.response.send_message(f"{success_message}\n{failure_message}", ephemeral=True)
-
-    
     raise NotImplementedError
 bot.run(TOKEN)
