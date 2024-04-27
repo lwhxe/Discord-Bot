@@ -135,6 +135,7 @@ async def upgrade(interaction: discord.Interaction) -> None:
 @app_commands.describe(content="What do you want to send?")
 @app_commands.describe(users="Who do you want to send this to?")
 async def notify(interaction: discord.Interaction, content: str, users: str):
+    await interaction.user.defer()
     if users == "all":
         successful_users = fetch_all_members(bot, 1205978381741596684)
         for user in successful_users:
@@ -176,6 +177,7 @@ async def notify(interaction: discord.Interaction, content: str, users: str):
         failure_message = "Failed to send to: " + ", ".join(failed_users)
     else:
         failure_message = "All messages were successfully sent."
+    await interaction.user.send_message("Sent.", ephemeral=True)
 
     # Handle initial response if it wasn't already done
     if interaction.response.is_done():
