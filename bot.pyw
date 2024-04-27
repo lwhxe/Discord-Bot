@@ -125,6 +125,50 @@ async def upgrade(interaction: discord.Interaction) -> None:
 @bot.tree.command(name="notify", description="Sends custom message to users.")
 @app_commands.describe(content="What do you want to send?")
 @app_commands.describe(users="Who do you want to send this to?")
-async def notify(interaction: discord.Interaction, content: str, users: str) -> None:
+async def notify(interaction: discord.Interaction, content: str, users: str):
+    user_list = users.replace(" ", "").split(",")  # Corrected from `remove` to `replace`
+    successful_users = []
+    failed_users = []
+
+    for full_username in user_list:
+        try:
+            username, discriminator = full_username.split('#')
+        except ValueError:
+            await interaction.response.send_message("Please provide each username in the format username#discriminator.", ephemeral=True)
+            return
+
+        user_found = None
+        # Search through all members in all guilds the bot is part of
+        for guild in bot.guilds:
+            user_found = discord.utils.find(lambda m: m.name == username and m.discriminator == discriminator, guild.members)
+            if user_found:
+                break
+
+        if user_found:
+            try:
+                await user_found.send(content)
+                successful_users.append(f"{username}#{discriminator}")
+            except Exception as e:
+                failed_users.append(f"{username}#{discriminator}: {str(e)}")
+        else:
+            failed_users.append(f"{username}#{discriminator}: User not found")
+
+    if successful_users:
+        success_message = "Message sent to: " + ", ".join(successful_users)
+    else:
+        success_message = "No messages were sent."
+
+    if failed_users:
+        failure_message = "Failed to send to: " + ", ".join(failed_users)
+    else:
+        failure_message = "All messages were successfully sent."
+
+    # Handle initial response if it wasn't already done
+    if interaction.response.is_done():
+        await interaction.followup.send(f"{success_message}\n{failure_message}", ephemeral=True)
+    else:
+        await interaction.response.send_message(f"{success_message}\n{failure_message}", ephemeral=True)
+
+    
     raise NotImplementedError
 bot.run(TOKEN)
