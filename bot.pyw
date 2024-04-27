@@ -25,6 +25,15 @@ def check_syntax(filename) -> None:
     except py_compile.PyCompileError as e:
         print(f"Syntax error in {filename}: {e}")
         return 1
+async def fetch_all_members(bot, guild_id):
+    guild = bot.get_guild(guild_id)
+    if guild is not None:
+        # Use fetch_members if you need to ensure all members are loaded (especially for large guilds)
+        members = await guild.fetch_members(limit=None).flatten()
+        return members  # Returns a list of Member objects
+    else:
+        print("Guild not found. Ensure the bot is part of the guild and the ID is correct.")
+        return None
 @bot.event
 async def on_ready():
     try:
@@ -126,9 +135,12 @@ async def upgrade(interaction: discord.Interaction) -> None:
 @app_commands.describe(content="What do you want to send?")
 @app_commands.describe(users="Who do you want to send this to?")
 async def notify(interaction: discord.Interaction, content: str, users: str):
-    user_list = users.replace(" ", "").split(",")  # Corrected from `remove` to `replace`
-    successful_users = []
-    failed_users = []
+    if content == "all":
+        fetch_all_members(bot, 1205978381741596684)
+    else:
+        user_list = users.replace(" ", "").split(",")  # Corrected from `remove` to `replace`
+        successful_users = []
+        failed_users = []
 
     for full_username in user_list:
         try:
