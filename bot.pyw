@@ -135,7 +135,7 @@ async def upgrade(interaction: discord.Interaction) -> None:
 @app_commands.describe(content="What do you want to send?")
 @app_commands.describe(users="Who do you want to send this to?")
 async def notify(interaction: discord.Interaction, content: str, users: str):
-    if content == "all":
+    if users == "all":
         successful_users = fetch_all_members(bot, 1205978381741596684)
         for user in successful_users:
             await user.send(content)
