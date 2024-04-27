@@ -135,25 +135,28 @@ async def upgrade(interaction: discord.Interaction) -> None:
 @app_commands.describe(content="What do you want to send?")
 @app_commands.describe(users="Who do you want to send this to?")
 async def notify(interaction: discord.Interaction, content: str, users: str):
-    await interaction.user.defer()
-    if users == "all":
-        successful_users = fetch_all_members(bot, 1205978381741596684)
-        for user in successful_users:
-            await user.send(content)
-    else:
-        user_list = users.replace(" ", "").split(",")  # Corrected from `remove` to `replace`
-        successful_users = []
-        failed_users = []
+    await interaction.response.defer(ephemeral=True)  # Correctly defer the response
+    successful_users = []
+    failed_users = []
 
+    if users == "all":
+        members = await fetch_all_members(bot, 1205978381741596684)  # Await the async call
+        for user in members:
+            try:
+                await user.send(content)
+                successful_users.append(f"{user.name}#{user.discriminator}")
+            except Exception as e:
+                failed_users.append(f"{user.name}#{user.discriminator}: {str(e)}")
+    else:
+        user_list = users.replace(" ", "").split(",")
         for full_username in user_list:
             try:
                 username, discriminator = full_username.split('#')
             except ValueError:
-                await interaction.response.send_message("Please provide each username in the format username#discriminator.", ephemeral=True)
+                await interaction.followup.send("Please provide each username in the format username#discriminator.", ephemeral=True)
                 return
 
             user_found = None
-            # Search through all members in all guilds the bot is part of
             for guild in bot.guilds:
                 user_found = discord.utils.find(lambda m: m.name == username and m.discriminator == discriminator, guild.members)
                 if user_found:
@@ -177,12 +180,7 @@ async def notify(interaction: discord.Interaction, content: str, users: str):
         failure_message = "Failed to send to: " + ", ".join(failed_users)
     else:
         failure_message = "All messages were successfully sent."
-    await interaction.user.send_message("Sent.", ephemeral=True)
 
-    # Handle initial response if it wasn't already done
-    if interaction.response.is_done():
-        await interaction.followup.send(f"{success_message}\n{failure_message}", ephemeral=True)
-    else:
-        await interaction.response.send_message(f"{success_message}\n{failure_message}", ephemeral=True)
-    raise NotImplementedError
+    # Send a follow-up message after handling initial response
+    await interaction.followup.send(f"{success_message}\n{failure_message}", ephemeral=True)
 bot.run(TOKEN)
