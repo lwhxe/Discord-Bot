@@ -122,4 +122,7 @@ async def upgrade(interaction: discord.Interaction) -> None:
             return
         msg = discord.Embed(description="Bot upgraded.", color=0xFF0000)
         await interaction.followup.send(embed=msg, ephemeral=True)
+@bot.tree.command(name="notify", description="Sends custom message to users.")
+async def notify(interaction: discord.Interaction) -> None:
+    raise NotImplementedError
 bot.run(TOKEN)
