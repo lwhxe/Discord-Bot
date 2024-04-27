@@ -28,9 +28,8 @@ def check_syntax(filename) -> None:
 async def fetch_all_members(bot, guild_id):
     guild = bot.get_guild(guild_id)
     if guild is not None:
-        # Use fetch_members if you need to ensure all members are loaded (especially for large guilds)
-        members = await guild.fetch_members(limit=None).flatten()
-        return members  # Returns a list of Member objects
+        await guild.chunk()  # This ensures all members are loaded
+        return guild.members  # Returns a list of Member objects
     else:
         print("Guild not found. Ensure the bot is part of the guild and the ID is correct.")
         return None
