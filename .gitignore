@@ -1,4 +1,11 @@
-json_files
-conversion
+# Ignore directory named 'json_files'
+json_files/
+
+# Ignore directory named 'conversion'
+conversion/
+
+# Ignore specific file 'create_tar.bat'
 create_tar.bat
+
+# Ignore specific file 'requirements.txt'
 requirements.txt
