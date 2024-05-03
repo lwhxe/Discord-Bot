@@ -195,8 +195,8 @@ async def notify(interaction: discord.Interaction, content: str, users: str):
     await interaction.followup.send(f"{success_message}\n{failure_message}", ephemeral=True)
 @bot.tree.command(name="yt_dlp", description="Downloads video from internet.")
 @app_commands.describe(url="What URL are you downloading from?")
-@app_commands.describe(format_specifiers="Yt-dlp needs some format specifiers from you.)
+@app_commands.describe(format_specifiers="Yt-dlp needs some format specifiers from you.")
 @app_commands.describe(filename="What do you want the file to be called?")
 async def yt_dlp(interaction: discord.Interaction, url: str, format_specifiers: str, filename: str):
-    raise NotÍmplementedError
+    raise NotImplementedError
 bot.run(TOKEN)
