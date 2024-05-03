@@ -29,7 +29,7 @@ def check_syntax(filename) -> None:
         return
     except py_compile.PyCompileError as e:
         print(f"Syntax error in {filename}: {e}")
-        return 1
+        return e
 async def fetch_all_members(bot, guild_id):
     guild = bot.get_guild(guild_id)
     if guild is not None:
@@ -116,9 +116,9 @@ async def update(interaction: discord.Interaction) -> None:
         await interaction.response.send_message(embed=msg, ephemeral=True)
         # Restarting the script
         check = check_syntax("main.py")
-        if check != 1:
+        if check == 0:
             os.execl(sys.executable, sys.executable, 'main.py')
-        msg = discord.Embed(description="There was an error...", color=0xFF0000)
+        msg = discord.Embed(title="There was an error...", description=check, color=0xFF0000)
         await interaction.followup.send(embed=msg, ephemeral=True)
         return
 @bot.tree.command(name="upgrade", description="Pull from github...")
