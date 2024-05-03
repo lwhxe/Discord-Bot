@@ -13,7 +13,7 @@ import os
 import sys
 import requests
 import py_compile
-subprocess.run(["sudo", "pip3", "install", "--upgrade", "google-auth", "google-auth-oauthlib", "google-api--python-client"])
+subprocess.run(["sudo", "pip3", "install", "--upgrade", "google-auth", "google-auth-oauthlib", "google-api-python-client"])
 with open("json_files/badwords.json", 'r') as json_file:
     bad_words = json.load(json_file)
 with open("json_files/key.txt", "r") as key_file:
