@@ -118,7 +118,7 @@ async def update(interaction: discord.Interaction) -> None:
         check = check_syntax("main.py")
         if check == 0:
             os.execl(sys.executable, sys.executable, 'main.py')
-        msg = discord.Embed(title="There was an error...", description=check, color=0xFF0000)
+        msg = discord.Embed(description=f"There was an error\n{check}", color=0xFF0000)
         await interaction.followup.send(embed=msg, ephemeral=True)
         return
 @bot.tree.command(name="upgrade", description="Pull from github...")
