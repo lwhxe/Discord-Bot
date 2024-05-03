@@ -22,30 +22,10 @@ TOKEN = data
 bot = commands.Bot(command_prefix='/', intents=discord.Intents.all())
 def check_syntax(filename):
     try:
-        # This attempts to compile the source into a code object that can be executed
-        # If there are syntax errors, it will raise an exception
         py_compile.compile(filename, doraise=True)
-        print(f"No syntax errors in {filename}.")
         return None  # Explicitly returning None to indicate success
     except py_compile.PyCompileError as e:
-        # If a PyCompileError is caught, it typically contains the filename, lineno, text, and the offset of the error
-        error_info = {
-            'filename': e.filename,
-            'lineno': e.lineno,
-            'text': e.text,
-            'offset': e.offset,
-            'error': str(e)
-        }
-        print(f"Syntax error in {filename}: {error_info}")
-        return error_info  # Returning a dictionary with error details
-    except Exception as general_error:
-        # This handles any other exception that might be raised, capturing its traceback
-        general_error_info = {
-            'error': 'An unexpected error occurred',
-            'details': traceback.format_exc()
-        }
-        print(f"Unexpected error in {filename}: {general_error_info['details']}")
-        return general_error_info  # Returning unexpected error details
+        return e
 async def fetch_all_members(bot, guild_id) -> list:
     guild = bot.get_guild(guild_id)
     if guild is not None:
