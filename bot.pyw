@@ -2,9 +2,9 @@ import discord
 from discord import app_commands
 from discord.ext import commands, tasks
 import subprocess
-#from google.oauth2.credentials import Credentials
-#from googleapiclient.discovery import build
-#from googleapiclient.http import MediaFileUpload
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 import re
 import asyncio
 import time as pytime
@@ -13,7 +13,6 @@ import os
 import sys
 import requests
 import py_compile
-subprocess.run(["sudo", "pip3", "install", "--upgrade", "google-auth", "google-auth-oauthlib", "google-api-python-client"])
 with open("json_files/badwords.json", 'r') as json_file:
     bad_words = json.load(json_file)
 with open("json_files/key.txt", "r") as key_file:
