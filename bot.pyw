@@ -19,16 +19,16 @@ with open("json_files/key.txt", "r") as key_file:
     data = key_file.read()
 TOKEN = data
 bot = commands.Bot(command_prefix='/', intents=discord.Intents.all())
-def check_syntax(filename) -> None:
+def check_syntax(filename):
     try:
-        # This function compiles the source into a code object which can be executed
-        # It will raise a PyCompileError if there are syntax errors
+        # This will compile the source into a code object that can be executed; raise an exception on syntax errors
         py_compile.compile(filename, doraise=True)
         print(f"No syntax errors in {filename}.")
-        return
-    except py_compile.PyCompileError as e:
-        print(f"Syntax error in {filename}: {e}")
-        return e
+        return None  # Explicitly returning None for clarity
+    except Exception as e:
+        error_details = traceback.format_exc()
+        print(f"Syntax error or other issue in {filename}: {error_details}")
+        return error_details  # Returning detailed traceback information
 async def fetch_all_members(bot, guild_id):
     guild = bot.get_guild(guild_id)
     if guild is not None:
