@@ -1,6 +1,10 @@
 import discord
 from discord import app_commands
 from discord.ext import commands, tasks
+import subprocess
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 import re
 import asyncio
 import time as pytime
@@ -33,6 +37,9 @@ async def fetch_all_members(bot, guild_id):
     else:
         print("Guild not found. Ensure the bot is part of the guild and the ID is correct.")
         return None
+def download_video(url, download_path, format_specifier='best'):
+    # Command to download the video in the specified format to the given path
+    subprocess.run(['yt-dlp', '-f', format_specifier, '-o', download_path, url])
 @bot.event
 async def on_ready():
     try:
