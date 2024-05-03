@@ -40,6 +40,9 @@ async def fetch_all_members(bot, guild_id):
 def download_video(url, download_path, format_specifier='best'):
     # Command to download the video in the specified format to the given path
     subprocess.run(['yt-dlp', '-f', format_specifier, '-o', download_path, url])
+def get_file_size(file_path):
+    # Get the size of the file in megabytes
+    return os.path.getsize(file_path) / (1024 * 1024)
 @bot.event
 async def on_ready():
     try:
