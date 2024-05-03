@@ -19,7 +19,7 @@ with open("json_files/key.txt", "r") as key_file:
     data = key_file.read()
 TOKEN = data
 bot = commands.Bot(command_prefix='/', intents=discord.Intents.all())
-def check_syntax(filename):
+def check_syntax(filename) -> None:
     try:
         # This will compile the source into a code object that can be executed; raise an exception on syntax errors
         py_compile.compile(filename, doraise=True)
@@ -29,7 +29,7 @@ def check_syntax(filename):
         error_details = traceback.format_exc()
         print(f"Syntax error or other issue in {filename}: {error_details}")
         return error_details  # Returning detailed traceback information
-async def fetch_all_members(bot, guild_id):
+async def fetch_all_members(bot, guild_id) -> list:
     guild = bot.get_guild(guild_id)
     if guild is not None:
         await guild.chunk()  # This ensures all members are loaded
@@ -37,14 +37,14 @@ async def fetch_all_members(bot, guild_id):
     else:
         print("Guild not found. Ensure the bot is part of the guild and the ID is correct.")
         return None
-def download_video(url, download_path, format_specifier='best'):
+def download_video(url, download_path, format_specifier='best') -> None:
     # Command to download the video in the specified format to the given path
     subprocess.run(['yt-dlp', '-f', format_specifier, '-o', download_path, url])
-def get_file_size(file_path):
+def get_file_size(file_path) -> float:
     # Get the size of the file in megabytes
     return os.path.getsize(file_path) / (1024 * 1024)
 @bot.event
-async def on_ready():
+async def on_ready() -> None:
     try:
         # Sync registered commands with the current commands in code.
         # This updates any changes and removes commands not present in the code.
