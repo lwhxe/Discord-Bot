@@ -64,6 +64,13 @@ async def on_ready() -> None:
     except Exception as e:
         print(f"Error during command sync or removal: {e}")
 @bot.event
+async def on_member_join(member) -> None:
+    username = member.name
+    channel = bot.get_channel(1144739033151447060)
+    message = f"[{username}](https://media.discordapp.net/attachments/1144718259699060736/1255925602112766074/welcome_new_member.png?ex=667ee75d&is=667d95dd&hm=f257ccdf52c5080707651b945519f19ce6316582a18d174bd8d8b8e0735da69a&=&format=webp&quality=lossless), welcome to Sovereign!"
+    if channel:
+        await channel.send(message)
+@bot.event
 async def on_message(message) -> None:
     if message.author == bot.user:
         return
