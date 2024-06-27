@@ -119,7 +119,7 @@ async def update(interaction: discord.Interaction) -> None:
         await interaction.response.send_message(embed=msg, ephemeral=True)
         # Restarting the script
         check = check_syntax("main.py")
-        if is None:
+        if check is None:
             os.execl(sys.executable, sys.executable, 'main.py')
         msg = discord.Embed(description=f"There was an error\n{check}", color=0xFF0000)
         await interaction.followup.send(embed=msg, ephemeral=True)
