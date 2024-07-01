@@ -3,9 +3,6 @@ from discord import app_commands
 from discord.ext import commands, tasks
 import subprocess
 import traceback
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
 import re
 import asyncio
 import time as pytime
